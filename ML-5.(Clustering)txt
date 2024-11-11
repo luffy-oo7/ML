@@ -1,0 +1,41 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.preprocessing import LabelEncoder,StandardScaler
+from sklearn.cluster import KMeans
+from sklearn.mixture import GaussianMixture
+from sklearn.metrics import silhouette_score
+
+df = pd.read_csv('/content/Mall_Customers.csv')
+df.head()
+
+df['Genre']=LabelEncoder().fit_transform(df['Genre'])
+df.head()
+
+df[['Annual Income (k$)', 'Spending Score (1-100)']] = StandardScaler().fit_transform(df[['Annual Income (k$)', 'Spending Score (1-100)']])
+
+X=df[['Annual Income (k$)','Spending Score (1-100)']]
+
+inertia = [KMeans(n_clusters=k, random_state=42).fit(X).inertia_ for k in range(1, 11)]
+plt.plot(range(1, 11), inertia, 'bo-')
+plt.xlabel('Number of Clusters')
+plt.ylabel('Inertia')
+plt.title('Elbow Method for K-Means')
+plt.show()
+
+optimal_clusters = 5
+df['Cluster_KMeans'] = KMeans(n_clusters=optimal_clusters, random_state=42).fit_predict(X)
+df['Cluster_GMM'] = GaussianMixture(n_components=optimal_clusters, random_state=42).fit_predict(X)
+
+fig, axes = plt.subplots(1, 2, figsize=(15, 5))
+for i, method in enumerate(['KMeans', 'GMM']):
+    sns.scatterplot(data=df, x='Annual Income (k$)', y='Spending Score (1-100)', hue=f'Cluster_{method}', palette='viridis', ax=axes[i])
+    axes[i].set_title(f'{method} Clustering')
+plt.show()
+
+fig, axes = plt.subplots(1, 2, figsize=(15, 5))
+for i, method in enumerate(['KMeans', 'GMM']):
+    sns.scatterplot(data=df, x='Annual Income (k$)', y='Spending Score (1-100)', hue=f'Cluster_{method}', palette='viridis', ax=axes[i])
+    axes[i].set_title(f'{method} Clustering')
+plt.show()
