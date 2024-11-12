@@ -33,9 +33,3 @@ for i, method in enumerate(['KMeans', 'GMM']):
     sns.scatterplot(data=df, x='Annual Income (k$)', y='Spending Score (1-100)', hue=f'Cluster_{method}', palette='viridis', ax=axes[i])
     axes[i].set_title(f'{method} Clustering')
 plt.show()
-
-fig, axes = plt.subplots(1, 2, figsize=(15, 5))
-for i, method in enumerate(['KMeans', 'GMM']):
-    sns.scatterplot(data=df, x='Annual Income (k$)', y='Spending Score (1-100)', hue=f'Cluster_{method}', palette='viridis', ax=axes[i])
-    axes[i].set_title(f'{method} Clustering')
-plt.show()
